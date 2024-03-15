@@ -1,0 +1,21 @@
+pandas 
+mlflow==2.2.2
+notebook
+numpy
+scikit-learn
+matplotlib
+python-box==6.0.2
+optuna
+xgboost
+lightgbm
+catboost
+pyYAML
+tqdm
+ensure==1.0.2
+joblib
+jsonify
+python-dotenv
+types-PyYAML
+Flask
+Flask-Cors
+-e .
