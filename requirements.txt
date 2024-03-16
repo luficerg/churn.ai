@@ -13,6 +13,7 @@ pyYAML
 tqdm
 ensure==1.0.2
 joblib
+streamlit==1.32.2
 jsonify
 python-dotenv
 types-PyYAML
