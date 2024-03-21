@@ -26,7 +26,7 @@ This app will help you to train a machine learning model to predict whether a cu
 Here are some examples of the test data , you can test model , [here is original file](https://www.kaggle.com/competitions/playground-series-s4e1/data)
 """)
 
-df = pd.read_csv(Path('app\\small_example.csv'))
+df = pd.read_csv(Path('app/small_example.csv'))
 
 st.dataframe(df)
 
@@ -116,8 +116,8 @@ if predict:
 
     st.write('Prediction For Customer Churn: ',str(preds))
 
-    corr = import_img('app\correlation-coefficient.webp')
-    img = import_img('app\corr.png')
+    corr = import_img('app/correlation-coefficient.webp')
+    img = import_img('app/corr.png')
 
     st.header('How to check for correlation')
     st.image(corr, caption = 'correlation')
