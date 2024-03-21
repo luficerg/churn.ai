@@ -31,8 +31,8 @@ catboost_info/
 #MLFLOW
 MLFLOW_TRACKING_URI/
 
-# node
-node_modules/
+# vs code
+.vscode/
 
 # PyInstaller
 #  Usually these files are written by a python script from a template

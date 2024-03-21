@@ -2,11 +2,11 @@ pandas
 mlflow==2.2.2
 notebook
 numpy
-scikit-learn
+scikit-learn==1.2.2
 matplotlib
 python-box==6.0.2
 optuna
-xgboost
+xgboost==2.0.2
 lightgbm
 catboost
 pyYAML

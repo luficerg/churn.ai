@@ -1,78 +1,129 @@
-from flask import Flask, render_template, request, jsonify
-import os 
 import streamlit as st
-from streamlit.components import v1 as components
+from src.data_validation import DataValidation
 import pandas as pd
-from src_python.pipeline.prediction import PredictionPipeline
+import random
+from pathlib import Path
+from predict import PredictionPipeline
+from PIL import Image
 
-app = Flask(__name__) # initializing a flask app
+@st.cache_data
+def import_img(path):
+    data = Image.open(Path(path))
+    return data
 
-# @app.route('/train',methods=['GET'])  # route to train the pipeline
-# def training():
-#     os.system("python main.py")
-#     return "Training Successful!" 
+####STREAMLIT CODE #####
+hide = """
+    <style>
+    #MainMenu {visibility:hidden;}
+    footer {visibility:hidden;}
+    </style>"""
 
-# @app.route('/',methods=['GET'])  # route to display the home page
-# def homePage():
-#     return render_template("index.html")
+st.markdown(hide, unsafe_allow_html=True)
 
+st.title("Churn Bank Model Trainer")
+st.write("""
+This app will help you to train a machine learning model to predict whether a customer will churn or not.
+Here are some examples of the test data , you can test model , [here is original file](https://www.kaggle.com/competitions/playground-series-s4e1/data)
+""")
 
-def main():
-    st.title("Embedding React App in Streamlit")
+df = pd.read_csv(Path('app\\small_example.csv'))
 
-    print(os.getcwd())
-    # Load your React app's HTML content
-    with open("build\\index.html", "r") as f:
-        react_html = f.read()
+st.dataframe(df)
 
-    my_component = components.declare_component("build", url = "https://localhost:3000")
-    # Render the HTML content using Streamlit components
-    components.html(react_html, height=800)
+# Define the choice for the user
+choice = st.radio("Choose an option:", ("Select a Random or Your example", "Enter your own inputs"))
 
-# @app.route('/predict',methods=['POST','GET']) # route to show the predictions in a web UI
-# def index():
-#     if request.method == 'POST':
-#         try:
-#             #  reading the inputs given by the user
-#             CustomerId = int(request.form['CustomerId'])
-#             Surname = request.form['Surname']
-#             CreditScore = int(request.form['CreditScore'])
-#             Geography = request.form['Geography']
-#             Gender = request.form['Gender']
-#             Age = float(request.form['Age'])
-#             Tenure = int(request.form['Tenure'])
-#             Balance = float(request.form['Balance'])
-#             NumOfProducts = int(request.form['NumOfProducts'])
-#             HasCrCard = float(request.form['HasCrCard'])
-#             IsActiveMember = float(request.form['IsActiveMember'])
-#             EstimatedSalary = float(request.form['EstimatedSalary'])
+if choice == "Select a Random or Your example":
 
-#             # Create a DataFrame from the input data
-#             data = {
-#                 'CustomerId': [CustomerId], 'Surname': [Surname], 'CreditScore': [CreditScore],
-#                 'Geography': [Geography], 'Gender': [Gender], 'Age': [Age], 'Tenure': [Tenure],
-#                 'Balance': [Balance], 'NumOfProducts': [NumOfProducts], 'HasCrCard': [HasCrCard],
-#                 'IsActiveMember': [IsActiveMember], 'EstimatedSalary': [EstimatedSalary]
-#             }
-#             df = pd.DataFrame(data)
+    example = st.button("Take a Random example", type="primary")
 
-            
-#             obj = PredictionPipeline()
-#             predict = obj.predict(df)
-#             print(predict)
+    if example:
+        # generate a random number between 0 and 74
+        num = random.randint(0, 74)
+        st.write("This is the testing example:",num)
+        df_example = df.iloc[num]
+        print(df_example)
 
+    else:
+        # user specified a random number
+        num = st.number_input("Enter a random number between 0 and 74", step = 1, min_value = 0, max_value = 74)
+        df_example = df.iloc[num]
+        print(df_example)
 
-#             return jsonify({"prediction": predict})
+    #  reading the inputs given by the user
+    CustomerId = st.number_input('CustomerID', step = 1, value = df_example.CustomerId)
+    Surname = st.text_input('Surname', value = df_example.Surname)
+    CreditScore = st.number_input('CreditScore', step = 1, min_value = 300, max_value = 900 , value = df_example.CreditScore)
 
-#         except Exception as e:
-#             print('The Exception message is: ',e)
-#             return 'something is wrong'
+    Geo = ('France', 'Germany', 'Spain', 'Others')
+    Geography = st.selectbox(
+        'Geography', Geo, index = Geo.index(df_example.Geography))
+    
+    Gen = ('Male', 'Female','Others')
+    Gender = st.selectbox(
+        'Gender', Gen, index = Gen.index(df_example.Gender))
+    
+    Age = st.number_input('Age', step = 1., min_value = 1., max_value = 150., value = df_example.Age)
+    Tenure = st.number_input('Tenure', step = 1, min_value = 0, max_value = 15, value = df_example.Tenure)
+    Balance = st.number_input('Balance', value = df_example.Balance)
+    NumOfProducts = st.number_input('NumOfProducts', step = 1, value = df_example.NumOfProducts)
+    HasCrCard = st.selectbox('HasCrCard', (0.,1.), index = (0.,1.).index(df_example.HasCrCard))
+    IsActiveMember = st.selectbox('IsActiveMember', (0.,1.), index = (0.,1.).index(df_example.IsActiveMember))
+    EstimatedSalary = st.number_input('EstimatedSalary', min_value = 1., step = 1000., value = df_example.EstimatedSalary)
 
-#     else:
-#         return render_template("index.html")
+else:
 
+    #  reading the inputs given by the user
+    CustomerId = st.number_input('CustomerID', step = 1)
+    Surname = st.text_input('Surname')
+    CreditScore = st.number_input('CreditScore', step = 1, min_value = 300, max_value = 900)
+    Geography = st.selectbox(
+        'Geography', ('France', 'Germany', 'Spain', 'Others'))
 
+    Gender = st.selectbox(
+        'Gender', ('Male', 'Female','Others'))
+    Age = st.number_input('Age', step = 1., min_value = 1., max_value = 150.)
+    Tenure = st.number_input('Tenure', step = 1, min_value = 0, max_value = 15)
+    Balance = st.number_input('Balance')
+    NumOfProducts = st.number_input('NumOfProducts', step = 1)
+    HasCrCard = st.selectbox('HasCrCard', (0.,1.))
+    IsActiveMember = st.selectbox('IsActiveMember', (0.,1.))
+    EstimatedSalary = st.number_input('EstimatedSalary', step = 1000., min_value = 1.)
 
-if __name__ == "__main__":
-    main()
-	
+predict = st.button("Predict", type="primary")
+ 
+if predict:
+    # Create a DataFrame from the input data
+    data = {
+        'CustomerId': [CustomerId], 'Surname': [Surname], 'CreditScore': [CreditScore],
+        'Geography': [Geography], 'Gender': [Gender], 'Age': [Age], 'Tenure': [Tenure],
+        'Balance': [Balance], 'NumOfProducts': [NumOfProducts], 'HasCrCard': [HasCrCard],
+        'IsActiveMember': [IsActiveMember], 'EstimatedSalary': [EstimatedSalary]
+    }
+    df = pd.DataFrame(data)
+
+    # Validate the DataFrame from the input data
+    data_validation = DataValidation(df, 'schema.yaml')
+    status = data_validation.validate_data()
+    st.write(status, "validation for data validation(it matches input with its datatype..) ")
+
+    if status:
+        obj = PredictionPipeline()
+        preds = obj.predict(df)
+        print(preds)
+    else:
+        print('error: %s' % status)
+
+    st.write('Prediction For Customer Churn: ',str(preds))
+
+    corr = import_img('app\correlation-coefficient.webp')
+    img = import_img('app\corr.png')
+
+    st.header('How to check for correlation')
+    st.image(corr, caption = 'correlation')
+    st.header('Check the correlation of feature here')
+    st.image(img, caption='actual correlation')
+    st.write('Here, Age feature has highest positive correlation with Bank Churn (Exited), so age have highest predictive power for Churn (Exited)')
+
+else:
+    st.write('Prediction For Customer Churn: -')
