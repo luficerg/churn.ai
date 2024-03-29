@@ -7,4 +7,4 @@ COPY . /app
 
 RUN pip install -r requirements.txt
 
-CMD ["python3", "-m", "streamlit", "run", "app.py", "--server.port", "8080"]
+CMD ["python3", "-m", "streamlit", "run", "app.py"]

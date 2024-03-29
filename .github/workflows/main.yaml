@@ -88,9 +88,9 @@ jobs:
         with:
           mask-password: true
       
-      # - name: Stop and remove container if running
-      #   run: |
-      #    docker ps -q --filter "name=texts" | grep -q . && docker stop texts && docker rm -fv texts
+      - name: Stop and remove container if running
+        run: |
+         docker ps -q --filter "name=texts" | grep -q . && docker stop texts && docker rm -fv texts
       
       - name: Pull latest images
         run: |
