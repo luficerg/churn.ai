@@ -149,7 +149,12 @@ export MLFLOW_TRACKING_PASSWORD= 251c01a63af78636ff098c62735d662f759756ce \
 	newgrp docker
 	
 # 6. Configure EC2 as self-hosted runner:
-    setting>actions>runner>new self hosted runner> choose os> then run command one by one
+    - GO to GitHUb REpo setting>
+	- Actions>
+	- Runner>
+	- New self hosted runner>
+	- Choose os>
+	- Then run command one by one into EC2 machine
 
 
 # 7. Setup github secrets:
@@ -160,6 +165,6 @@ export MLFLOW_TRACKING_PASSWORD= 251c01a63af78636ff098c62735d662f759756ce \
 
     AWS_REGION = ap-south-1
 
-    AWS_ECR_LOGIN_URI = demo>>  727204150125.dkr.ecr.ap-south-1.amazonaws.com
+    AWS_ECR_LOGIN_URI = 
 
-    ECR_REPOSITORY_NAME = churn.ai
+    ECR_REPOSITORY_NAME = 
