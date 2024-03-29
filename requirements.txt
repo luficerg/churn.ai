@@ -17,6 +17,4 @@ streamlit==1.32.2
 jsonify
 python-dotenv
 types-PyYAML
-Flask
-Flask-Cors
 -e .
